@@ -5,6 +5,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 #include "gameobject.h"
+#include "ball.h"
 
 enum class GAMESTATE { RUNNING, QUIT };
 
@@ -19,6 +20,8 @@ public:
     void render();
     void clean();
     SDL_Texture* loadTexture(const char* filepath);
+    void renderScore(SDL_Renderer* renderer);
+    void loadNumberSprites();
 
     GAMESTATE gameState;
     SDL_Renderer* renderer;
@@ -28,6 +31,10 @@ private:
     GameObject stick1;
     GameObject stick2;
     GameObject* activeStick;
+    Ball ball;
+    Goal goal;
+    int score;
+    SDL_Texture* numberTextures[10];
 };
 
 #endif

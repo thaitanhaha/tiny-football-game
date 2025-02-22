@@ -20,7 +20,7 @@ public:
     int getHeight() const;
     void render(SDL_Renderer* renderer) const;
 
-private:
+protected:
     Position pos;
     int width, height;
 };

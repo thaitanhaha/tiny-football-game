@@ -15,6 +15,7 @@ int main(int argc, char *argv[])
     // SDL_Texture* background = game.loadTexture("sprite/background.png");
 
     int frame = 0;
+    game.loadNumberSprites();
 
     while (game.gameState != GAMESTATE::QUIT)
     {

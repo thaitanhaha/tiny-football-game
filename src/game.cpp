@@ -2,7 +2,8 @@
 
 GameManager::GameManager()
     : window(nullptr), renderer(nullptr), gameState(GAMESTATE::RUNNING),
-      stick1(50, 200, 50, 10), stick2(300, 300, 50, 10), activeStick(&stick1) {}
+      stick1(50, 200, 100, 10), stick2(300, 300, 100, 10), activeStick(&stick1),
+      ball(100, 100, 10), goal(216, 0, 80, 20), score(0) {}
 
 GameManager::~GameManager() {
     clean();
@@ -22,6 +23,16 @@ SDL_Texture* GameManager::loadTexture(const char* filepath) {
     return texture;
 }
 
+void GameManager::loadNumberSprites() {
+    for (int i = 0; i < 10; i++) {
+        std::string filename = "sprite/Number" + std::to_string(i) + " 7x10.png";
+        numberTextures[i] = loadTexture(filename.c_str());
+        if (!numberTextures[i]) {
+            std::cerr << "Failed to load " << filename << ": " << SDL_GetError() << std::endl;
+        }
+    }
+}
+
 void GameManager::handleEvents() {
     SDL_Event event;
     while (SDL_PollEvent(&event)) {
@@ -34,16 +45,16 @@ void GameManager::handleEvents() {
                     activeStick = (activeStick == &stick1) ? &stick2 : &stick1;
                     break;
                 case SDLK_w:
-                    activeStick->move(0, -5);
+                    activeStick->move(0, -15);
                     break;
                 case SDLK_s:
-                    activeStick->move(0, 5);
+                    activeStick->move(0, 15);
                     break;
                 case SDLK_a:
-                    activeStick->move(-5, 0);
+                    activeStick->move(-15, 0);
                     break;
                 case SDLK_d:
-                    activeStick->move(5, 0);
+                    activeStick->move(15, 0);
                     break;
             }
         }
@@ -53,6 +64,30 @@ void GameManager::handleEvents() {
 void GameManager::update() {
     stick1.clampPosition(0, 0, 256 - stick1.getWidth(), 512 - stick1.getHeight());
     stick2.clampPosition(256, 0, 512 - stick2.getWidth(), 512 - stick2.getHeight());
+
+    ball.update();
+    ball.checkCollision(stick1);
+    ball.checkCollision(stick2);
+    if (ball.checkGoal(goal)) {
+        score++;
+    }
+}
+
+void GameManager::renderScore(SDL_Renderer* renderer) {
+    std::string scoreStr = std::to_string(score);
+    std::cout<<score;
+    int digitWidth = 21, digitHeight = 30;
+    int startX = 10;
+
+    for (char digit : scoreStr) {
+        int num = digit - '0';
+
+        SDL_Rect srcRect = { 0, 0, 7, 10 };
+        SDL_Rect destRect = { startX, 10, digitWidth, digitHeight };
+
+        SDL_RenderCopy(renderer, numberTextures[num], &srcRect, &destRect);
+        startX += digitWidth + 5;
+    }
 }
 
 void GameManager::render() {
@@ -65,11 +100,20 @@ void GameManager::render() {
 
     stick1.render(renderer);
     stick2.render(renderer);
+    ball.render(renderer);
+    goal.render(renderer);
+
+    renderScore(renderer);
 
     SDL_RenderPresent(renderer);
 }
 
 void GameManager::clean() {
+    for (int i = 0; i < 10; i++) {
+        if (numberTextures[i]) {
+            SDL_DestroyTexture(numberTextures[i]);
+        }
+    }
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
