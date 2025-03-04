@@ -31,6 +31,8 @@ private:
     GameObject stick1;
     GameObject stick2;
     GameObject* activeStick;
+    GameObject stickCom1;
+    GameObject stickCom2;
     Ball ball;
     Goal goal;
     int score;

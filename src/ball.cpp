@@ -1,6 +1,10 @@
 #include "ball.h"
 #include <SDL.h>
 #include <cmath>
+#include <random>
+
+std::random_device rd;
+std::mt19937 gen(rd());
 
 Ball::Ball(int x, int y, int r)
     : GameObject(x, y, r * 2, r * 2), radius(r), velocityX(2.0f), velocityY(2.0f) {}
@@ -53,9 +57,13 @@ bool Ball::checkGoal(Goal& goal) {
     if (ballCenterX > goalRect.x && ballCenterX < goalRect.x + goalRect.w &&
         ballCenterY > goalRect.y && ballCenterY < goalRect.y + goalRect.h) {
         
-        pos.x = 100;
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> posDist(196, 316);
+        std::uniform_int_distribution<int> velDist(0, 1);
+        pos.x = posDist(gen);
         pos.y = 100;
-        velocityX = 2.0f;
+        velocityX = velDist(gen) ? 2.0f : -2.0f;
         velocityY = 2.0f;
         return true;
     }

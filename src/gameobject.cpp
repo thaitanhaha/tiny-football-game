@@ -10,11 +10,25 @@ void GameObject::move(int dx, int dy) {
     pos.y += dy;
 }
 
-void GameObject::clampPosition(int minX, int minY, int maxX, int maxY) {
-    if (pos.x < minX) pos.x = minX;
-    if (pos.y < minY) pos.y = minY;
-    if (pos.x > maxX) pos.x = maxX;
-    if (pos.y > maxY) pos.y = maxY;
+bool GameObject::clampPosition(int minX, int minY, int maxX, int maxY) {
+    bool res = false;
+    if (pos.x < minX) {
+        pos.x = minX;
+        res = true;
+    }
+    if (pos.y < minY) {
+        pos.y = minY;
+        res = true;
+    }
+    if (pos.x > maxX) {
+        pos.x = maxX;
+        res = true;
+    }
+    if (pos.y > maxY) {
+        pos.y = maxY;
+        res = true;
+    }
+    return res;
 }
 
 Position GameObject::getPosition() const {
@@ -29,8 +43,42 @@ int GameObject::getHeight() const {
     return height;
 }
 
-void GameObject::render(SDL_Renderer* renderer) const {
-    SDL_SetRenderDrawColor(renderer, 255, 255, 255, 255);
+void GameObject::render(SDL_Renderer* renderer, int r, int g, int b) const {
+    SDL_SetRenderDrawColor(renderer, r, g, b, 255);
     SDL_Rect rect = { pos.x, pos.y, width, height };
     SDL_RenderFillRect(renderer, &rect);
 }
+
+void GameObject::setMovingUp(bool moving) { 
+    movingUp = moving; 
+    if (moving) movingDown = false;
+}
+void GameObject::setMovingDown(bool moving) { 
+    movingDown = moving; 
+    if (moving) movingUp = false;
+}
+void GameObject::setMovingLeft(bool moving) { 
+    movingLeft = moving;
+    if (moving) movingRight = false;
+}
+void GameObject::setMovingRight(bool moving) { 
+    movingRight = moving; 
+    if (moving) movingLeft = false;
+}
+
+bool GameObject::isMovingUp() const { return movingUp; }
+bool GameObject::isMovingDown() const { return movingDown; }
+bool GameObject::isMovingLeft() const { return movingLeft; }
+bool GameObject::isMovingRight() const { return movingRight; }
+
+void GameObject::changeMoving() {
+    if (movingLeft) {
+        setMovingLeft(false);
+        setMovingRight(true);
+    }
+    else if (movingRight) {
+        setMovingRight(false);
+        setMovingLeft(true);
+    }
+}
+

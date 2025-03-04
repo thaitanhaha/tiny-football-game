@@ -11,14 +11,29 @@ struct Position {
 };
 
 class GameObject {
+private: 
+    bool movingUp, movingDown, movingLeft, movingRight;
+
 public:
     GameObject(int x, int y, int w, int h);
     void move(int dx, int dy);
-    void clampPosition(int minX, int minY, int maxX, int maxY);
+    bool clampPosition(int minX, int minY, int maxX, int maxY);
     Position getPosition() const;
     int getWidth() const;
     int getHeight() const;
-    void render(SDL_Renderer* renderer) const;
+    void render(SDL_Renderer* renderer, int r, int g, int b) const;
+
+    void setMovingUp(bool moving);
+    void setMovingDown(bool moving);
+    void setMovingLeft(bool moving);
+    void setMovingRight(bool moving);
+
+    bool isMovingUp() const;
+    bool isMovingDown() const;
+    bool isMovingLeft() const;
+    bool isMovingRight() const;
+
+    void changeMoving();
 
 protected:
     Position pos;
