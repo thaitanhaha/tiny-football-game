@@ -12,7 +12,7 @@ public:
     Ball(int x, int y, int r);
     void update();
     void render(SDL_Renderer* renderer) const;
-    void checkCollision(GameObject& stick);
+    void checkCollision(GameObject& stick, bool isObstacle);
     bool checkGoal(Goal& goal);
 
 private:

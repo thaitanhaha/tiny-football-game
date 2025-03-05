@@ -1,4 +1,5 @@
 #include "game.h"
+#include <random>
 
 GameManager::GameManager()
     : window(nullptr), renderer(nullptr), gameState(GAMESTATE::RUNNING),
@@ -6,7 +7,8 @@ GameManager::GameManager()
       activeStick(&stick1), activeStickCom(NULL),
       ball(100, 100, 5), score(0), scoreCom(0), 
       goal(206, 0, 100, 10), goalCom(206, 502, 100, 10),
-      stickCom1(88, 100, 80, 5), stickCom2(344, 100, 80, 5), playerMode(0), gameTime(60) {
+      stickCom1(88, 100, 80, 5), stickCom2(344, 100, 80, 5), playerMode(0), gameTime(60),
+      obstacle(0, 0, 175, 5), obstacleAppear(false) {
         startTime = SDL_GetTicks();
         remainingTime = gameTime;
       }
@@ -141,6 +143,12 @@ void GameManager::update() {
                 gameState = GAMESTATE::MENU;
                 playerMode = 0;
             }
+            else if (remainingTime % 15 == 0 && obstacleAppear == false) {
+                setObstacle(true);
+            }
+            else if ((remainingTime + 5) % 15 == 0 && obstacleAppear == true) {
+                setObstacle(false);
+            }
         }
     }
 
@@ -160,8 +168,8 @@ void GameManager::update() {
         activeStick->move(3, 0);
     }
 
-    bool isCom1ReachEdge = stickCom1.clampPosition(0, goal.getHeight(), 256 - stickCom1.getWidth(), 256 - stickCom2.getHeight());
-    bool isCom2ReachEdge = stickCom2.clampPosition(256, goal.getHeight(), 512 - stickCom2.getWidth(), 256 - stickCom2.getHeight());
+    bool isCom1ReachEdge = stickCom1.clampPosition(0, goal.getHeight(), 256 - stickCom1.getWidth(), 212 - stickCom2.getHeight());
+    bool isCom2ReachEdge = stickCom2.clampPosition(256, goal.getHeight(), 512 - stickCom2.getWidth(), 212 - stickCom2.getHeight());
     
     if (playerMode == 1) {
         if (isCom1ReachEdge) stickCom1.changeMoving();
@@ -186,15 +194,32 @@ void GameManager::update() {
     }
 
     ball.update();
-    ball.checkCollision(stick1);
-    ball.checkCollision(stick2);
-    ball.checkCollision(stickCom1);
-    ball.checkCollision(stickCom2);
+    ball.checkCollision(stick1, false);
+    ball.checkCollision(stick2, false);
+    ball.checkCollision(stickCom1, false);
+    ball.checkCollision(stickCom2, false);
+    if (obstacleAppear) ball.checkCollision(obstacle, true);
     if (ball.checkGoal(goal)) {
         score++;
     }
-    if (ball.checkGoal(goalCom)) {
+    if (playerMode == 2 && ball.checkGoal(goalCom)) {
         scoreCom++;
+    }
+}
+
+void GameManager::setObstacle(bool active) {
+    obstacleAppear = active;
+    if (active) {
+        std::random_device rd;
+        std::mt19937 gen(rd());
+        std::uniform_int_distribution<int> posYDist(222, 290);
+        std::uniform_int_distribution<int> dirDist(0, 1);
+        if (dirDist(gen) == 0) {
+            obstacle.setPos(0, posYDist(gen));
+        }
+        else {
+            obstacle.setPos(337, posYDist(gen));
+        }
     }
 }
 
@@ -272,6 +297,7 @@ void GameManager::render() {
     
         ball.render(renderer);
         goal.render(renderer);
+        if (obstacleAppear) obstacle.render(renderer, 255, 255, 255);
         if (playerMode == 2) goalCom.render(renderer);
     
         if (playerMode == 1) renderScore(renderer, 10, score);

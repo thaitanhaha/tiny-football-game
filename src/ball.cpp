@@ -25,7 +25,7 @@ void Ball::update() {
     }
 }
 
-void Ball::checkCollision(GameObject& stick) {
+void Ball::checkCollision(GameObject& stick, bool isObstacle) {
     SDL_Rect stickRect = { stick.getPosition().x, stick.getPosition().y, stick.getWidth(), stick.getHeight() };
 
     int ballCenterX = pos.x + radius;
@@ -39,10 +39,12 @@ void Ball::checkCollision(GameObject& stick) {
         bool fromTop = ballCenterY < stickRect.y + stickRect.h / 2;
         
         if (fromTop) {
-            velocityY = -5.0f;
+            if (isObstacle) velocityY = -2.0f;
+            else velocityY = -5.0f;
             pos.y = stickRect.y - radius * 2;
         } else {
-            velocityY = 5.0f;
+            if (isObstacle) velocityY = 2.0f;
+            else velocityY = 5.0f;
             pos.y = stickRect.y + stickRect.h + radius;
         }
     }

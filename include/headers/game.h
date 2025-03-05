@@ -27,6 +27,7 @@ public:
     void renderScore(SDL_Renderer* renderer, int y, int score);
     void renderTime(SDL_Renderer* renderer);
     void loadSprites();
+    void setObstacle(bool active);
 
     GAMESTATE gameState;
     SDL_Renderer* renderer;
@@ -37,6 +38,8 @@ private:
     GameObject* activeStick;
     GameObject stickCom1, stickCom2;
     GameObject* activeStickCom;
+    GameObject obstacle;
+    bool obstacleAppear;
     Ball ball;
     Goal goal, goalCom;
     int score, scoreCom;
