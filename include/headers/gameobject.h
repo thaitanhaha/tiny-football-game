@@ -21,6 +21,7 @@ public:
     Position getPosition() const;
     int getWidth() const;
     int getHeight() const;
+    void setWidth(int w);
     void render(SDL_Renderer* renderer, int r, int g, int b) const;
 
     void setMovingUp(bool moving);
@@ -34,6 +35,8 @@ public:
     bool isMovingRight() const;
 
     void changeMoving();
+    void setPos(int x, int y);
+    void setMoving();
 
 protected:
     Position pos;

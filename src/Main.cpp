@@ -12,10 +12,10 @@ int main(int argc, char *argv[])
     GameManager game;
 
     game.init("TinyFootball", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, screenWidth, screenHeight, SDL_WINDOW_SHOWN);
-    // SDL_Texture* background = game.loadTexture("sprite/background.png");
 
+    game.gameState = GAMESTATE::MENU;
     int frame = 0;
-    game.loadNumberSprites();
+    game.loadSprites();
 
     while (game.gameState != GAMESTATE::QUIT)
     {

@@ -82,3 +82,18 @@ void GameObject::changeMoving() {
     }
 }
 
+void GameObject::setWidth(int w) {
+    this -> width = w;
+}
+
+void GameObject::setPos(int x, int y) {
+    this -> pos.x = x;
+    this -> pos.y = y;
+}
+
+void GameObject::setMoving() {
+    setMovingUp(false);
+    setMovingDown(false);
+    setMovingLeft(false);
+    setMovingRight(false);
+}

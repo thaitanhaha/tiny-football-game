@@ -62,7 +62,7 @@ bool Ball::checkGoal(Goal& goal) {
         std::uniform_int_distribution<int> posDist(196, 316);
         std::uniform_int_distribution<int> velDist(0, 1);
         pos.x = posDist(gen);
-        pos.y = 100;
+        pos.y = 256;
         velocityX = velDist(gen) ? 2.0f : -2.0f;
         velocityY = 2.0f;
         return true;

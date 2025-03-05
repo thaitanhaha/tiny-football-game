@@ -7,7 +7,11 @@
 #include "gameobject.h"
 #include "ball.h"
 
-enum class GAMESTATE { RUNNING, QUIT };
+enum class GAMESTATE {
+    MENU,
+    RUNNING,
+    QUIT
+};
 
 class GameManager {
 public:
@@ -20,23 +24,28 @@ public:
     void render();
     void clean();
     SDL_Texture* loadTexture(const char* filepath);
-    void renderScore(SDL_Renderer* renderer);
-    void loadNumberSprites();
+    void renderScore(SDL_Renderer* renderer, int y, int score);
+    void renderTime(SDL_Renderer* renderer);
+    void loadSprites();
 
     GAMESTATE gameState;
     SDL_Renderer* renderer;
 
 private:
     SDL_Window* window;
-    GameObject stick1;
-    GameObject stick2;
+    GameObject stick1, stick2;
     GameObject* activeStick;
-    GameObject stickCom1;
-    GameObject stickCom2;
+    GameObject stickCom1, stickCom2;
+    GameObject* activeStickCom;
     Ball ball;
-    Goal goal;
-    int score;
+    Goal goal, goalCom;
+    int score, scoreCom;
     SDL_Texture* numberTextures[10];
+    SDL_Texture* option1Texture;
+    SDL_Texture* option2Texture;
+    int playerMode;
+    Uint32 startTime;
+    int remainingTime, gameTime;
 };
 
 #endif
