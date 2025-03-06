@@ -46,6 +46,7 @@ private:
     SDL_Texture* numberTextures[10];
     SDL_Texture* option1Texture;
     SDL_Texture* option2Texture;
+    SDL_Texture* logoTexture;
     int playerMode;
     Uint32 startTime;
     int remainingTime, gameTime;

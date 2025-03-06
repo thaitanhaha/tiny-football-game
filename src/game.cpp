@@ -43,6 +43,8 @@ void GameManager::loadSprites() {
     std::string option2 = "sprite/2players.png";
     option1Texture = loadTexture(option1.c_str());
     option2Texture = loadTexture(option2.c_str());
+    std::string logo = "sprite/logo.png";
+    logoTexture = loadTexture(logo.c_str());
 }
 
 void GameManager::handleEvents() {
@@ -269,9 +271,11 @@ void GameManager::render() {
 
     if (gameState == GAMESTATE::MENU)
     {
-        SDL_Rect menu1Rect = { 148, 150, 216, 24 };
-        SDL_Rect menu2Rect = { 136, 250, 240, 24 };
+        SDL_Rect logoRect = { 59, 100, 393, 32 };
+        SDL_Rect menu1Rect = { 148, 250, 216, 24 };
+        SDL_Rect menu2Rect = { 136, 350, 240, 24 };
 
+        SDL_RenderCopy(renderer, logoTexture, NULL, &logoRect);
         SDL_RenderCopy(renderer, option1Texture, NULL, &menu1Rect);
         SDL_RenderCopy(renderer, option2Texture, NULL, &menu2Rect);
     }
@@ -319,6 +323,7 @@ void GameManager::clean() {
     }
     SDL_DestroyTexture(option1Texture);
     SDL_DestroyTexture(option2Texture);
+    SDL_DestroyTexture(logoTexture);
     SDL_DestroyRenderer(renderer);
     SDL_DestroyWindow(window);
     SDL_Quit();
